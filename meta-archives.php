@@ -212,12 +212,13 @@ function get_post_meta_archive_link( $query_var = null, $meta_value = null, $pag
  */
 
 function get_post_meta_archive_description( $query_var = null, $query_value = null ) {
-	global $wp_metas;
+	global $wp_metas, $wp_query;
 
 	$query_var = $query_var !== null ? $query_var : get_queried_object_id();
 
 	$description = !empty($wp_metas[$query_var]->description) ? $wp_metas[$query_var]->description : '';
-	if ( !empty($wp_metas[$query_var]->query_value) && $query_value !== null ) {
+	if ( !empty($wp_metas[$query_var]->query_value) ) {
+		$query_value = $query_value !== null ? $query_value : $wp_query->get( $query_var );
 		$description = sprintf( $description, $query_value );
 	}
 
