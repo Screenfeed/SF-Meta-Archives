@@ -143,16 +143,14 @@ function is_post_meta_archive( $query_var = null, $query_value = null ) {
 /*
  * Url of a meta archive
  *
- * @param $query_var  (string) See register_post_meta().
+ * @param $query_var  (string) See register_post_meta(). Required.
  * @param $meta_value (string) The meta value. Required for "Taxonomy-like".
  * @param $paged      (int)    Page 1, page 2... Optional.
  * @return (string) The url of the archive page.
  */
 
-function get_post_meta_archive_link( $query_var = null, $meta_value = null, $paged = 1 ) {
+function get_post_meta_archive_link( $query_var, $meta_value = null, $paged = 1 ) {
 	global $wp_metas, $wp_rewrite, $wp_query;
-
-	$query_var = $query_var !== null ? $query_var : get_queried_object_id();
 	if ( empty($wp_metas[$query_var]) )
 		return false;
 
@@ -206,19 +204,19 @@ function get_post_meta_archive_link( $query_var = null, $meta_value = null, $pag
 /*
  * Description of a meta archive
  *
- * @param $query_var   (string) See register_post_meta().
- * @param $query_value (string) For a "taxonomy-like" archive, you can specify a value: if the description contains "%s", the value will be used.
+ * @param $query_var   (string) See register_post_meta(). Fallback to the current archive value.
+ * @param $query_value (string) For a "taxonomy-like" archive, you can specify a value: if the description contains "%s", the value will be used. Fallback to the current archive value.
  * @return (string) The description of the archive page.
  */
 
 function get_post_meta_archive_description( $query_var = null, $query_value = null ) {
 	global $wp_metas, $wp_query;
 
-	$query_var = $query_var !== null ? $query_var : get_queried_object_id();
+	$query_var = $query_var === null && is_post_meta_archive() ? get_queried_object_id() : $query_var;
 
 	$description = !empty($wp_metas[$query_var]->description) ? $wp_metas[$query_var]->description : '';
 	if ( !empty($wp_metas[$query_var]->query_value) ) {
-		$query_value = $query_value !== null ? $query_value : $wp_query->get( $query_var );
+		$query_value = $query_value === null && is_post_meta_archive( $query_var ) ? $wp_query->get( $query_var ) : $query_value;
 		$description = sprintf( $description, $query_value );
 	}
 

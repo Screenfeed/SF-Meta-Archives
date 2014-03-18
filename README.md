@@ -41,9 +41,9 @@ You have 2 kinds of archive:
 @return *(bool)*
 
 
-**get_post_meta_archive_link( $query_var = null, $meta_value = null, $paged = 1 )**: Url of a meta archive.
+**get_post_meta_archive_link( $query_var, $meta_value = null, $paged = 1 )**: Url of a meta archive.
 
-@param *(string)* `$query_var` See register_post_meta().
+@param *(string)* `$query_var` See register_post_meta(). Required.
 
 @param *(string)* `$query_value` The meta value. Required for "Taxonomy-like".
 
@@ -54,9 +54,9 @@ You have 2 kinds of archive:
 
 **get_post_meta_archive_description( $query_var = null, $query_value = null )**: Description of a meta archive.
 
-@param *(string)* `$query_var` See register_post_meta().
+@param *(string)* `$query_var` See register_post_meta(). Fallback to the current archive value.
 
-@param *(string)* `$query_value` For a "taxonomy-like" archive, you can specify a value: if the description contains "%s", the value will be used.
+@param *(string)* `$query_value` For a "taxonomy-like" archive, you can specify a value: if the description contains "%s", the value will be used. Fallback to the current archive value.
 
 @return *(string)* The description of the archive page.
 
@@ -130,7 +130,8 @@ In this case, "event" is a Custom Post Type, "_city" is a post meta.
 					'compare'	=> '!=',
 				),
 			),
-			'title' 	=> __( 'Events by city' ),
+			'title' 		=> __( 'Events by city' ),
+			'description'	=> __( 'Events in %s.' ),
 		);
 		register_post_meta( '_city', $args );
 	}
@@ -153,6 +154,12 @@ Display a link to an archive:
 	<a href="<?php echo get_post_meta_archive_link( 'city', 'paris' ); ?>">Paris</a>
 
 The URL will be *http://example.com/city/paris/* or *http://example.com?city=paris*.
+
+Display the description of an archive:
+
+	echo wpautop( get_post_meta_archive_description( 'city', 'paris' ) );
+
+This will print *&lt;p>Events in paris.&lt;/p>*.
 
 In this situation, be aware of one thing: you may not want to deal with space caracters or uppercase letters…
 But the good news is there's enough filters and actions in the plugin to do what you may want.
