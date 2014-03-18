@@ -3,7 +3,7 @@
  * Plugin Name: SF Meta Archives
  * Plugin URI: http://www.screenfeed.fr
  * Description: Gives you the hability to have archive pages for your post metas.
- * Version: 1.0
+ * Version: 1.1
  * Author: Grégory Viguier
  * Author URI: http://www.screenfeed.fr/greg/
  * License: GPLv3
@@ -32,7 +32,7 @@ if( !defined( 'ABSPATH' ) )
  *      meta_query  (array)        Takes an array of meta query arguments arrays (it takes an array of arrays). See http://codex.wordpress.org/Class_Reference/WP_Query#Custom_Field_Parameters. Required for "Post-type-like".
  *      rewrite     (bool|array)   Array of parameters for rewrite (or true/false): slug, with_front, feeds, pages, ep_mask. Optional.
  *      label       (string)       Used to filter the wp_title() function for the archive title. Optional, but should be used.
- *      description (string)       If someday you need one... (will be stored in the global var). Optional.
+ *      description (string)       If someday you need one... (will be stored in the global var. Optional.
  */
 
 function register_post_meta( $meta_name, $args ) {
@@ -143,14 +143,16 @@ function is_post_meta_archive( $query_var = null, $query_value = null ) {
 /*
  * Url of a meta archive
  *
- * @param $query_var  (string) See register_post_meta(). Required.
+ * @param $query_var  (string) See register_post_meta().
  * @param $meta_value (string) The meta value. Required for "Taxonomy-like".
  * @param $paged      (int)    Page 1, page 2... Optional.
  * @return (string) The url of the archive page.
  */
 
-function get_post_meta_archive_link( $query_var, $meta_value = null, $paged = 1 ) {
+function get_post_meta_archive_link( $query_var = null, $meta_value = null, $paged = 1 ) {
 	global $wp_metas, $wp_rewrite, $wp_query;
+
+	$query_var = $query_var !== null ? $query_var : get_queried_object_id();
 	if ( empty($wp_metas[$query_var]) )
 		return false;
 
@@ -198,6 +200,21 @@ function get_post_meta_archive_link( $query_var, $meta_value = null, $paged = 1 
 
 	$url = apply_filters( 'post-metas_archive_link', home_url( $url ), $query_var, $meta_value, $paged );
 	return esc_url( $url );
+}
+
+
+/*
+ * Description of a meta archive
+ *
+ * @param $query_var  (string) See register_post_meta().
+ * @return (string) The description of the archive page.
+ */
+
+function get_post_meta_archive_description( $query_var = null ) {
+	global $wp_metas;
+	$query_var = $query_var !== null ? $query_var : get_queried_object_id();
+	$description = !empty($wp_metas[$query_var]->description) ? $wp_metas[$query_var]->description : '';
+	return apply_filters( 'post-metas_archive_description', $description, $query_var );
 }
 
 /*-------------------------------------------------------------------------------*/

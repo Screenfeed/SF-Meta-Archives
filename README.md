@@ -8,7 +8,7 @@ You have 2 kinds of archive:
 * *"Post-type-like" type:* an archive with an url like http://example.com/my-meta/
 * *"Taxonomy-like" type:* an archive with an url like http://example.com/my-meta/my-value/
 
-3 functions to use
+4 functions to use
 ---
 
 **register_post_meta( $meta_name, $args )**: Register the post metas.
@@ -29,7 +29,7 @@ You have 2 kinds of archive:
 
 `label` *(string)* Used to filter the wp_title() function for the archive title. Optional, but should be used.
 
-`description` *(string)* Not used so far, if someday you need one... (will be stored in the global var). Optional.
+`description` *(string)* Do I really have to explain what is it for? Optional.
 
 
 **is_post_meta_archive( $query_var = null, $query_value = null )**: Is a meta archive displaying?
@@ -41,15 +41,22 @@ You have 2 kinds of archive:
 @return *(bool)*
 
 
-**get_post_meta_archive_link( $query_var, $meta_value = null, $paged = 1 )**: Url of a meta archive.
+**get_post_meta_archive_link( $query_var = null, $meta_value = null, $paged = 1 )**: Url of a meta archive.
 
-@param *(string)* `$query_var` See register_post_meta(). Optional.
+@param *(string)* `$query_var` See register_post_meta().
 
 @param *(string)* `$query_value` The meta value. Required for "Taxonomy-like".
 
 @param *(int)* `$paged` Page 1, page 2... Optional.
 
 @return *(string)* The url of the archive page.
+
+
+**get_post_meta_archive_description( $query_var = null )**: Description of a meta archive.
+
+@param *(string)* `$query_var` See register_post_meta().
+
+@return *(string)* The description of the archive page.
 
 Examples
 ---
@@ -96,6 +103,12 @@ Display a link to the archive:
 	<a href="<?php echo get_post_meta_archive_link( 'with-thumb' ); ?>"><?php _e( 'Posts with a thumbnail' ); ?></a>
 
 The URL will be *http://example.com/with-thumb/* or *http://example.com?meta=with-thumb*.
+
+Display the description of an archive:
+
+	echo wpautop( get_post_meta_archive_description( 'with-thumb' ) );
+
+This will print *&lt;p>All my Posts with a thumbnail.&lt;/p>*.
 
 **An archive page listing events by city ("Taxonomy-like")**
 
