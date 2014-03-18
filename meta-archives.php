@@ -206,15 +206,22 @@ function get_post_meta_archive_link( $query_var = null, $meta_value = null, $pag
 /*
  * Description of a meta archive
  *
- * @param $query_var  (string) See register_post_meta().
+ * @param $query_var   (string) See register_post_meta().
+ * @param $query_value (string) For a "taxonomy-like" archive, you can specify a value: if the description contains "%s", the value will be used.
  * @return (string) The description of the archive page.
  */
 
-function get_post_meta_archive_description( $query_var = null ) {
+function get_post_meta_archive_description( $query_var = null, $query_value = null ) {
 	global $wp_metas;
+
 	$query_var = $query_var !== null ? $query_var : get_queried_object_id();
+
 	$description = !empty($wp_metas[$query_var]->description) ? $wp_metas[$query_var]->description : '';
-	return apply_filters( 'post-metas_archive_description', $description, $query_var );
+	if ( !empty($wp_metas[$query_var]->query_value) && $query_value !== null ) {
+		$description = sprintf( $description, $query_value );
+	}
+
+	return apply_filters( 'post-metas_archive_description', $description, $query_var, $query_value );
 }
 
 /*-------------------------------------------------------------------------------*/
