@@ -52,9 +52,11 @@ You have 2 kinds of archive:
 @return *(string)* The url of the archive page.
 
 
-**get_post_meta_archive_description( $query_var = null )**: Description of a meta archive.
+**get_post_meta_archive_description( $query_var = null, $query_value = null )**: Description of a meta archive.
 
 @param *(string)* `$query_var` See register_post_meta().
+
+@param *(string)* `$query_value` For a "taxonomy-like" archive, you can specify a value: if the description contains "%s", the value will be used.
 
 @return *(string)* The description of the archive page.
 
